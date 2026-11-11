@@ -74,6 +74,6 @@ jobs:
 
           gh release create $tag `
               --title "SQLite add-on $version" `
-              --notes "SQLite provider for Larik SQL Studio. Requires Larik 0.4 or newer with add-on support. Add the release URL and SHA-256 to the larik-addons index." `
+              --notes "SQLite provider for Larik SQL Studio. Requires the 1.1 provider contract (a host with the database file picker). Add the release URL and SHA-256 to the larik-addons index." `
               (Get-ChildItem 'out/larik.sqlite-*.zip').FullName `
               'out/SHA256SUMS.txt'
