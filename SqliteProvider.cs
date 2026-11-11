@@ -35,9 +35,11 @@ public sealed class SqliteProvider : IDatabaseProvider
         {
             Key = "file",
             Label = "Database file",
+            Kind = ProviderSettingKind.File,
+            FileExtensions = ["db", "sqlite", "sqlite3", "db3"],
             Required = true,
             Placeholder = @"C:\data\app.db",
-            Hint = "Full path to a SQLite file. Use :memory: for a private in-memory database (one per query tab).",
+            Hint = "Browse for a SQLite file, or type its full path. Use :memory: for a private in-memory database (one per query tab).",
         },
         new()
         {

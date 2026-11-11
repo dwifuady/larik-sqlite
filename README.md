@@ -9,13 +9,15 @@ reference, so it can be released independently of the app.
 
 ## Connect
 
-Set **Database file** to the full path of a `.db` file, for example `C:\data\app.db`. Relative paths
-are rejected because they would resolve against the app's working directory, which is not what the
-path in the dialog appears to mean.
+Choose **Database file** with **Browse…**, or type the full path of a `.db` file, for example
+`C:\data\app.db`. The picker only opens existing files; a path typed for a new file is created by
+the provider when **Create if missing** is on. Relative paths are rejected because they would
+resolve against the app's working directory, which is not what the path in the dialog appears to
+mean.
 
 | Setting | Default | Notes |
 | --- | --- | --- |
-| Database file | — | Required. `:memory:` opens a private in-memory database. |
+| Database file | — | Required. Browse for a file or type a full path. `:memory:` opens a private in-memory database. |
 | Read-only | off | Opens the file without write access and reports a missing file instead of creating it. |
 | Create if missing | on (Advanced) | Turn off to fail fast on a typo in the path. |
 | Foreign keys | on (Advanced) | Runs `PRAGMA foreign_keys` for this connection. |
@@ -89,7 +91,7 @@ After the release, add its URL and SHA-256 to the
 
 ## Contract
 
-Built against `Larik.Data` 1.0.0 and declares `>=1.0 <2.0` in `addon/larik-addon.json`. The app
+Built against `Larik.Data` 1.1.0 and declares `>=1.1 <2.0` in `addon/larik-addon.json`. The app
 binds the contract to its own assembly, so the add-on must not ship `Larik.Data.dll`.
 
 The provider contract and the add-on format are documented in
