@@ -70,6 +70,17 @@ public sealed class SqliteProviderTests
     // ------------------------------------------------------------------ connect
 
     [Fact]
+    public void The_file_setting_asks_the_host_for_a_browse_dialog()
+    {
+        var file = Assert.Single(
+            new SqliteProvider().Settings,
+            setting => setting.Key == "file");
+
+        Assert.Equal(ProviderSettingKind.File, file.Kind);
+        Assert.Equal(["db", "sqlite", "sqlite3", "db3"], file.FileExtensions);
+    }
+
+    [Fact]
     public async Task Open_creates_the_file_and_reports_version_and_databases()
     {
         using var temp = new TempDirectory();

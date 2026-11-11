@@ -1,9 +1,9 @@
 {
   "manifestVersion": 1,
   "id": "larik.sqlite",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "Larik",
-  "contract": ">=1.0 <2.0",
+  "contract": ">=1.1 <2.0",
   "providerIds": ["sqlite"],
   "entryAssembly": "Larik.Data.Sqlite.dll",
   "platforms": ["win-x64", "win-arm64"],

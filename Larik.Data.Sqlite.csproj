@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <AssemblyName>Larik.Data.Sqlite</AssemblyName>
     <RootNamespace>Larik.Data.Sqlite</RootNamespace>
     <!-- One restore produces the assets for both release zips. -->
@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Larik.Data" Version="1.0.0" />
+    <PackageReference Include="Larik.Data" Version="1.1.0" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.14" />
     <!-- Read straight from the open handle for exact transaction state. -->
     <PackageReference Include="SQLitePCLRaw.core" Version="2.1.13" />
