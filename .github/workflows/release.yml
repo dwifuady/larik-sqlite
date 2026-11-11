@@ -1,0 +1,79 @@
+name: Release add-on
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Add-on version, without the leading v (for example 1.0.0)
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $version = if ('${{ github.event_name }}' -eq 'workflow_dispatch') {
+              '${{ inputs.version }}'
+          } else {
+              '${{ github.ref_name }}' -replace '^v', ''
+          }
+
+          if ($version -notmatch '^\d+\.\d+\.\d+$') {
+              throw "Version '$version' is not MAJOR.MINOR.PATCH."
+          }
+
+          "value=$version" >> $env:GITHUB_OUTPUT
+          "tag=v$version" >> $env:GITHUB_OUTPUT
+
+      - name: Restore
+        run: |
+          dotnet restore Larik.Data.Sqlite.csproj
+          dotnet restore tests/Larik.Data.Sqlite.Tests/Larik.Data.Sqlite.Tests.csproj
+
+      - name: Test
+        run: dotnet test tests/Larik.Data.Sqlite.Tests/Larik.Data.Sqlite.Tests.csproj -c Release --no-restore
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $version = '${{ steps.version.outputs.value }}'
+          ./scripts/package.ps1 -Version $version -Rid win-x64
+          ./scripts/package.ps1 -Version $version -Rid win-arm64
+
+          $lines = Get-ChildItem 'out/larik.sqlite-*.zip' | ForEach-Object {
+              $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+              "$hash  $($_.Name)"
+          }
+          ($lines -join "`n") + "`n" | Set-Content -Path 'out/SHA256SUMS.txt' -Encoding ascii -NoNewline
+
+      - name: Publish release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = '${{ steps.version.outputs.value }}'
+          $tag = '${{ steps.version.outputs.tag }}'
+
+          gh release create $tag `
+              --title "SQLite add-on $version" `
+              --notes "SQLite provider for Larik SQL Studio. Requires Larik 0.4 or newer with add-on support. Add the release URL and SHA-256 to the larik-addons index." `
+              (Get-ChildItem 'out/larik.sqlite-*.zip').FullName `
+              'out/SHA256SUMS.txt'
